@@ -50,7 +50,7 @@ app.post("/login", (req, res, next) => {
       req.logIn(user, (err) => {
         if (err) throw err;
         res.send("Successfully Authenticated");
-        console.log(req.user);
+        //console.log(req.user);
       });
     }
   })(req, res, next);
@@ -75,7 +75,8 @@ app.post("/register", (req, res) => {
 });
 
 app.get("/user", (req, res) => {
-  res.send(req.user.username);
+  res.send(req.user);
+  console.log(req.user);
 });
 
 app.get("/getBlogs", (req, res) => {
