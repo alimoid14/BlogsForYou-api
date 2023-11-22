@@ -92,7 +92,7 @@ app.get("/getBlogs", isAuthenticated, (req, res) => {
   Blog.find().then((blogs) => res.json(blogs));
 });
 
-app.post("/createBlog", async (req, res) => {
+app.post("/createBlog", isAuthenticated, async (req, res) => {
   const blog = req.body;
   const newBlog = new Blog(blog);
   await newBlog.save();
