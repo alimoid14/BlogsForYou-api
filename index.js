@@ -36,6 +36,14 @@ require("./passportConfig")(passport);
 
 mongoose.connect(process.env.MONGO_URL);
 
+const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  } else {
+    res.status(401).send("Unauthorized"); // 401 status code for unauthorized access
+  }
+};
+
 //----------------------------------------------------ROUTES ARE DEFINED BELOW-----------------------------------------//
 
 app.get("/login", (req, res) => {
@@ -62,7 +70,7 @@ app.post("/register", (req, res) => {
     if (foundUser) res.send("Username already exists");
 
     const hashedPass = await bcrypt.hash(req.body.password, 13);
-    console.log(req.body.username, hashedPass);
+    //console.log(req.body.username, hashedPass);
     if (!foundUser) {
       const newUser = new User({
         username: req.body.username,
@@ -74,12 +82,13 @@ app.post("/register", (req, res) => {
   });
 });
 
-app.get("/user", (req, res) => {
-  res.send(req.user);
-  console.log(req.user);
+app.get("/getUser", (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(JSON.stringify(req.user));
+  console.log(JSON.stringify(req.user));
 });
 
-app.get("/getBlogs", (req, res) => {
+app.get("/getBlogs", isAuthenticated, (req, res) => {
   Blog.find().then((blogs) => res.json(blogs));
 });
 
