@@ -9,6 +9,9 @@ const BlogSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  username: {
+    type: String,
+  },
 });
 
 const Blog = mongoose.model("blogs", BlogSchema);

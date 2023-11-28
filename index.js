@@ -85,7 +85,7 @@ app.post("/register", (req, res) => {
 app.get("/getUser", (req, res) => {
   res.setHeader("Content-Type", "application/json");
   res.send(JSON.stringify(req.user));
-  console.log(JSON.stringify(req.user));
+  //console.log(JSON.stringify(req.user));
 });
 
 app.get("/getBlogs", isAuthenticated, (req, res) => {
