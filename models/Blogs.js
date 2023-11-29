@@ -12,6 +12,9 @@ const BlogSchema = new mongoose.Schema({
   username: {
     type: String,
   },
+  date: {
+    type: String,
+  },
 });
 
 const Blog = mongoose.model("blogs", BlogSchema);
