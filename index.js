@@ -65,14 +65,18 @@ app.post("/login", (req, res, next) => {
 });
 
 app.post("/register", (req, res) => {
-  User.findOne({ username: req.body.username }).then(async (foundUser, err) => {
+  User.findOne({
+    $or: [{ username: req.body.username }, { email: req.body.email }],
+  }).then(async (foundUser, err) => {
     if (err) throw err;
-    if (foundUser) res.send("Username already exists");
+    if (foundUser)
+      res.send("An account with this email/username already exists");
 
     const hashedPass = await bcrypt.hash(req.body.password, 13);
     //console.log(req.body.username, hashedPass);
     if (!foundUser) {
       const newUser = new User({
+        email: req.body.email,
         username: req.body.username,
         password: hashedPass,
       });
