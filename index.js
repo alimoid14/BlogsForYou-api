@@ -92,7 +92,7 @@ app.get("/getUser", (req, res) => {
   //console.log(JSON.stringify(req.user));
 });
 
-app.get("/getBlogs", isAuthenticated, (req, res) => {
+app.get("/getBlogs", (req, res) => {
   Blog.find().then((blogs) => res.json(blogs));
 });
 
