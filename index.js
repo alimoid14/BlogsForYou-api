@@ -104,6 +104,26 @@ app.post("/createBlog", isAuthenticated, async (req, res) => {
   res.json(blog);
 });
 
+app.post("/checkUsername", (req, res) => {
+  User.findOne({
+    username: req.body.username,
+  }).then(async (foundUser, err) => {
+    if (err) throw err;
+    if (foundUser) res.send("username already exists");
+    else res.send("");
+  });
+});
+
+app.post("/checkEmail", (req, res) => {
+  User.findOne({
+    email: req.body.email,
+  }).then(async (foundUser, err) => {
+    if (err) throw err;
+    if (foundUser) res.send("account with this email already exists");
+    else res.send("");
+  });
+});
+
 //-----------------------------------------------------END OF ROUTES--------------------------------------------------//
 
 app.listen(3001, () => {
