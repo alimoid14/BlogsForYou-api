@@ -132,6 +132,16 @@ app.post("/deleteBlog", isAuthenticated, (req, res) => {
   });
 });
 
+app.post("/editBlogContent", isAuthenticated, (req, res) => {
+  Blog.findByIdAndUpdate(req.body._id, { content: req.body.content }).then(
+    (result, error) => {
+      console.log(result);
+      res.send("Succesfully made the changes");
+      if (error) console.log(error);
+    }
+  );
+});
+
 //-----------------------------------------------------END OF ROUTES--------------------------------------------------//
 
 app.listen(3001, () => {
