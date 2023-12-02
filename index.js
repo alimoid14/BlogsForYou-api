@@ -124,6 +124,14 @@ app.post("/checkEmail", (req, res) => {
   });
 });
 
+app.post("/deleteBlog", isAuthenticated, (req, res) => {
+  console.log(req.body._id);
+  Blog.findByIdAndDelete(req.body._id).then((result, error) => {
+    if (error) console.log(error);
+    else console.log(result);
+  });
+});
+
 //-----------------------------------------------------END OF ROUTES--------------------------------------------------//
 
 app.listen(3001, () => {
