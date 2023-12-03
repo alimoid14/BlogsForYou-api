@@ -5,11 +5,11 @@ const mongoose = require("mongoose");
 const Blog = require("./models/Blogs");
 const User = require("./models/Users");
 const cors = require("cors");
+const session = require("express-session");
 const passport = require("passport");
 const passportLocal = require("passport-local").Strategy;
 //const cookieParser = require("cookie-parser");
 const bcrypt = require("bcryptjs");
-const session = require("express-session");
 const bodyParser = require("body-parser");
 
 const app = express();
@@ -83,6 +83,16 @@ app.post("/register", (req, res) => {
       await newUser.save();
       res.send("User created");
     }
+  });
+});
+
+app.post("/logout", function (req, res, next) {
+  console.log(req.userInformation);
+  req.logOut(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.json();
   });
 });
 
