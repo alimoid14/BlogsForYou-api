@@ -152,6 +152,19 @@ app.post("/editBlogContent", isAuthenticated, (req, res) => {
   );
 });
 
+app.post("/getUserName", (req, res) => {
+  User.findOne({ username: req.body.username }).then((foundUser, err) => {
+    if (foundUser) res.send(JSON.stringify({ username: foundUser.username }));
+    else res.send("");
+    if (err) console.log(err);
+  });
+});
+
+app.get("/getBlogsByUser", (req, res) => {
+  //console.log(req.query);
+  Blog.find({ username: req.query.username }).then((blogs) => res.json(blogs));
+});
+
 //-----------------------------------------------------END OF ROUTES--------------------------------------------------//
 
 app.listen(3001, () => {
