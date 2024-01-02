@@ -106,6 +106,11 @@ app.get("/getBlogs", (req, res) => {
   Blog.find().then((blogs) => res.json(blogs));
 });
 
+app.get("/getBlogs/:id", (req, res) => {
+  const id = req.params.id;
+  Blog.findById(id).then((blog) => res.json(blog));
+});
+
 app.post("/createBlog", isAuthenticated, async (req, res) => {
   const blog = req.body;
   const newBlog = new Blog(blog);
@@ -145,7 +150,7 @@ app.post("/deleteBlog", isAuthenticated, (req, res) => {
 app.post("/editBlogContent", isAuthenticated, (req, res) => {
   Blog.findByIdAndUpdate(req.body._id, { content: req.body.content }).then(
     (result, error) => {
-      console.log(result);
+      console.log(req.body._id);
       res.send("Succesfully made the changes");
       if (error) console.log(error);
     }
