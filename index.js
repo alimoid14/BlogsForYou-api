@@ -96,27 +96,45 @@ app.post("/logout", function (req, res, next) {
   });
 });
 
-app.get("/getUser", (req, res) => {
+app.get("/User", (req, res) => {
   res.setHeader("Content-Type", "application/json");
   res.send(JSON.stringify(req.user));
   //console.log(JSON.stringify(req.user));
 });
 
-app.get("/getBlogs", (req, res) => {
+app.get("/Blogs", (req, res) => {
   Blog.find().then((blogs) => res.json(blogs));
 });
 
-app.get("/getBlogs/:id", (req, res) => {
-  const id = req.params.id;
-  Blog.findById(id).then((blog) => res.json(blog));
-});
-
-app.post("/createBlog", isAuthenticated, async (req, res) => {
+app.post("/Blogs", isAuthenticated, async (req, res) => {
   const blog = req.body;
   const newBlog = new Blog(blog);
   await newBlog.save();
 
   res.json(blog);
+});
+
+app.get("/Blogs/:id", (req, res) => {
+  const id = req.params.id;
+  Blog.findById(id).then((blog) => res.json(blog));
+});
+
+app.delete("/Blogs/:id", isAuthenticated, (req, res) => {
+  console.log(req.params.id);
+  Blog.findByIdAndDelete(req.params.id).then((result, error) => {
+    if (error) console.log(error);
+    else console.log(result);
+  });
+});
+
+app.put("/Blogs/:id", isAuthenticated, (req, res) => {
+  Blog.findByIdAndUpdate(req.params.id, { content: req.body.content }).then(
+    (result, error) => {
+      console.log(req.params.id);
+      res.send("Succesfully made the changes");
+      if (error) console.log(error);
+    }
+  );
 });
 
 app.post("/checkUsername", (req, res) => {
@@ -139,33 +157,15 @@ app.post("/checkEmail", (req, res) => {
   });
 });
 
-app.post("/deleteBlog", isAuthenticated, (req, res) => {
-  console.log(req.body._id);
-  Blog.findByIdAndDelete(req.body._id).then((result, error) => {
-    if (error) console.log(error);
-    else console.log(result);
-  });
-});
-
-app.post("/editBlogContent", isAuthenticated, (req, res) => {
-  Blog.findByIdAndUpdate(req.body._id, { content: req.body.content }).then(
-    (result, error) => {
-      console.log(req.body._id);
-      res.send("Succesfully made the changes");
-      if (error) console.log(error);
-    }
-  );
-});
-
-app.post("/getUserName", (req, res) => {
-  User.findOne({ username: req.body.username }).then((foundUser, err) => {
+app.get("/UserName", (req, res) => {
+  User.findOne({ username: req.query.username }).then((foundUser, err) => {
     if (foundUser) res.send(JSON.stringify({ username: foundUser.username }));
     else res.send("");
     if (err) console.log(err);
   });
 });
 
-app.get("/getBlogsByUser", (req, res) => {
+app.get("/BlogsByUser", (req, res) => {
   //console.log(req.query);
   Blog.find({ username: req.query.username }).then((blogs) => res.json(blogs));
 });
