@@ -51,8 +51,8 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) throw err;
+  passport.authenticate("local", (error, user, info) => {
+    if (error) console.log(error);
     if (!user) res.send("No User Exists or wrong credentials");
     else {
       req.logIn(user, (err) => {
@@ -67,8 +67,8 @@ app.post("/login", (req, res, next) => {
 app.post("/register", (req, res) => {
   User.findOne({
     $or: [{ username: req.body.username }, { email: req.body.email }],
-  }).then(async (foundUser, err) => {
-    if (err) throw err;
+  }).then(async (foundUser, error) => {
+    if (error) console.log(error);
     if (foundUser)
       res.send("An account with this email/username already exists");
 
@@ -88,9 +88,9 @@ app.post("/register", (req, res) => {
 
 app.post("/logout", function (req, res, next) {
   console.log(req.userInformation);
-  req.logOut(function (err) {
-    if (err) {
-      return next(err);
+  req.logOut(function (error) {
+    if (error) {
+      return next(error);
     }
     res.json();
   });
@@ -103,7 +103,10 @@ app.get("/User", (req, res) => {
 });
 
 app.get("/Blogs", (req, res) => {
-  Blog.find().then((blogs) => res.json(blogs));
+  Blog.find().then((blogs, error) => {
+    console.log(error);
+    res.json(blogs);
+  });
 });
 
 app.post("/Blogs", isAuthenticated, async (req, res) => {
@@ -116,7 +119,10 @@ app.post("/Blogs", isAuthenticated, async (req, res) => {
 
 app.get("/Blogs/:id", (req, res) => {
   const id = req.params.id;
-  Blog.findById(id).then((blog) => res.json(blog));
+  Blog.findById(id).then((blog, error) => {
+    if (error) console.log(error);
+    res.json(blog);
+  });
 });
 
 app.delete("/Blogs/:id", isAuthenticated, (req, res) => {
@@ -140,8 +146,8 @@ app.put("/Blogs/:id", isAuthenticated, (req, res) => {
 app.post("/checkUsername", (req, res) => {
   User.findOne({
     username: req.body.username,
-  }).then(async (foundUser, err) => {
-    if (err) throw err;
+  }).then(async (foundUser, error) => {
+    if (error) console.log(error);
     if (foundUser) res.send("username already exists");
     else res.send("");
   });
@@ -150,24 +156,27 @@ app.post("/checkUsername", (req, res) => {
 app.post("/checkEmail", (req, res) => {
   User.findOne({
     email: req.body.email,
-  }).then(async (foundUser, err) => {
-    if (err) throw err;
+  }).then(async (foundUser, error) => {
+    if (error) console.log(error);
     if (foundUser) res.send("account with this email already exists");
     else res.send("");
   });
 });
 
 app.get("/UserName", (req, res) => {
-  User.findOne({ username: req.query.username }).then((foundUser, err) => {
+  User.findOne({ username: req.query.username }).then((foundUser, error) => {
     if (foundUser) res.send(JSON.stringify({ username: foundUser.username }));
     else res.send("");
-    if (err) console.log(err);
+    if (error) console.log(error);
   });
 });
 
 app.get("/BlogsByUser", (req, res) => {
   //console.log(req.query);
-  Blog.find({ username: req.query.username }).then((blogs) => res.json(blogs));
+  Blog.find({ username: req.query.username }).then((blogs, error) => {
+    if (error) console.log(error);
+    res.json(blogs);
+  });
 });
 
 //-----------------------------------------------------END OF ROUTES--------------------------------------------------//
