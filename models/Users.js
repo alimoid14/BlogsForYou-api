@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
 
 const alphaNumericRegex = /^[a-zA-Z0-9]+$/;
-const UserSchema = new mongoose.Schema({
+const UserSchema = new Schema({
   email: {
     type: String,
     //required: true,
@@ -18,5 +18,5 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-const User = mongoose.model("users", UserSchema);
-module.exports = User;
+const User = model("users", UserSchema);
+export default User;
