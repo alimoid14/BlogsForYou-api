@@ -8,7 +8,6 @@ const cors = require("cors");
 const session = require("express-session");
 const passport = require("passport");
 const passportLocal = require("passport-local").Strategy;
-//const cookieParser = require("cookie-parser");
 const bcrypt = require("bcryptjs");
 const bodyParser = require("body-parser");
 
@@ -58,7 +57,6 @@ app.post("/login", (req, res, next) => {
       req.logIn(user, (err) => {
         if (err) throw err;
         res.send("Successfully Authenticated");
-        //console.log(req.user);
       });
     }
   })(req, res, next);
@@ -73,7 +71,6 @@ app.post("/register", (req, res) => {
       res.send("An account with this email/username already exists");
 
     const hashedPass = await bcrypt.hash(req.body.password, 13);
-    //console.log(req.body.username, hashedPass);
     if (!foundUser) {
       const newUser = new User({
         email: req.body.email,
@@ -99,7 +96,6 @@ app.post("/logout", function (req, res, next) {
 app.get("/User", (req, res) => {
   res.setHeader("Content-Type", "application/json");
   res.send(JSON.stringify(req.user));
-  //console.log(JSON.stringify(req.user));
 });
 
 app.get("/Blogs", (req, res) => {
