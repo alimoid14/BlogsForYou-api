@@ -6,7 +6,7 @@ const Blog = require("./models/Blogs");
 const User = require("./models/Users");
 const cors = require("cors");
 const session = require("express-session");
-const MongoStore = require("connect-mongo")(session);
+const MongoDBStore = require("connect-mongodb-session")(session);
 const passport = require("passport");
 const passportLocal = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
@@ -23,10 +23,16 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const store = new MongoDBStore({
+  uri: process.env.MONGO_URL,
+  collection: "sessions",
+  expires: 1000 * 60 * 60 * 24, // Session will expire after 1 day
+});
+
 app.use(
   session({
     secret: process.env.SECRET,
-    store: new MongoStore(options),
+    store: store,
     resave: false,
     saveUninitialized: false,
   })
