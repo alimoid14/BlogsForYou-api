@@ -104,7 +104,7 @@ app.get("/User", (req, res) => {
 
 app.get("/Blogs", (req, res) => {
   Blog.find().then((blogs, error) => {
-    console.log(error);
+    if (error) console.log(error);
     res.json(blogs);
   });
 });
