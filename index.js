@@ -2,8 +2,8 @@ const dotenv = require("dotenv").config();
 
 import express, { json } from "express";
 import { connect } from "mongoose";
-import Blog from "./models/Blogs";
-import User from "./models/Users";
+import Blog from "./models/Blogs.js";
+import User from "./models/Users.js";
 import cors from "cors";
 import session from "express-session";
 const MongoDBStore = require("connect-mongodb-session")(session);
