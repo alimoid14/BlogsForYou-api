@@ -1,8 +1,8 @@
-import User from "./models/Users";
-import { compare } from "bcryptjs";
-import { Strategy as localStrategy } from "passport-local";
+const User = require("./models/Users");
+const bcrypt = require("bcryptjs");
+const localStrategy = require("passport-local").Strategy;
 
-export default function (passport) {
+module.exports = function (passport) {
   passport.use(
     new localStrategy((username, password, done) => {
       User.findOne({ $or: [{ username: username }, { email: username }] }).then(
@@ -11,7 +11,7 @@ export default function (passport) {
 
           if (!user) return done(null, false);
 
-          compare(password, user.password, (err, result) => {
+          bcrypt.compare(password, user.password, (err, result) => {
             if (err) throw err;
             if (result) return done(null, user);
             else return done(null, false);
@@ -36,4 +36,4 @@ export default function (passport) {
       cb(err, userInformation);
     });
   });
-}
+};

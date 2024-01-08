@@ -1,31 +1,27 @@
 const dotenv = require("dotenv").config();
 
-import express, { json } from "express";
-import { connect } from "mongoose";
-import Blog from "./models/Blogs.js";
-import User from "./models/Users.js";
-import cors from "cors";
-import session from "express-session";
+const express = require("express");
+const mongoose = require("mongoose");
+const Blog = require("./models/Blogs");
+const User = require("./models/Users");
+const cors = require("cors");
+const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
-import passport, {
-  initialize,
-  session as _session,
-  authenticate,
-} from "passport";
-import { Strategy as passportLocal } from "passport-local";
-import { hash } from "bcryptjs";
-import { json as _json, urlencoded } from "body-parser";
+const passport = require("passport");
+const passportLocal = require("passport-local").Strategy;
+const bcrypt = require("bcryptjs");
+const bodyParser = require("body-parser");
 
 const app = express();
-app.use(json());
+app.use(express.json());
 app.use(
   cors({
     origin: "http://localhost:3000", // <-- location of the react app were connecting to
     credentials: true,
   })
 );
-app.use(_json());
-app.use(urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const store = new MongoDBStore({
   uri: process.env.MONGO_URL,
@@ -41,11 +37,11 @@ app.use(
     saveUninitialized: false,
   })
 );
-app.use(initialize());
-app.use(_session());
-require("./passportConfig").default(passport);
+app.use(passport.initialize());
+app.use(passport.session());
+require("./passportConfig")(passport);
 
-connect(process.env.MONGO_URL);
+mongoose.connect(process.env.MONGO_URL);
 
 const isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -62,7 +58,7 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res, next) => {
-  authenticate("local", (error, user, info) => {
+  passport.authenticate("local", (error, user, info) => {
     if (error) console.log(error);
     if (!user) res.send("No User Exists or wrong credentials");
     else {
@@ -82,7 +78,7 @@ app.post("/register", (req, res) => {
     if (foundUser)
       res.send("An account with this email/username already exists");
 
-    const hashedPass = await hash(req.body.password, 13);
+    const hashedPass = await bcrypt.hash(req.body.password, 13);
     if (!foundUser) {
       const newUser = new User({
         email: req.body.email,
