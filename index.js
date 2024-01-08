@@ -5,7 +5,8 @@ const mongoose = require("mongoose");
 const Blog = require("./models/Blogs");
 const User = require("./models/Users");
 const cors = require("cors");
-const session = require("cookie-session");
+const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
 const passport = require("passport");
 const passportLocal = require("passport-local").Strategy;
 const bcrypt = require("bcryptjs");
@@ -25,6 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   session({
     secret: process.env.SECRET,
+    store: new MongoStore(options),
     resave: false,
     saveUninitialized: false,
   })
