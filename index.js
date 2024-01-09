@@ -37,7 +37,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       sameSite: "none",
-      //secure: true,
+      secure: true,
     },
   })
 );
@@ -78,7 +78,7 @@ app.post("/login", (req, res, next) => {
         return res.status(500).send("Internal Server Error");
       }
       console.log("Successfully Authenticated");
-      console.log(req.user);
+      //console.log(req.user); --> whole user info available here
       return res.send("Successfully Authenticated");
     });
   })(req, res, next);
