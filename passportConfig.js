@@ -33,6 +33,7 @@ module.exports = function (passport) {
       const userInformation = {
         username: user.username,
       };
+      console.log(userInformation);
       cb(err, userInformation);
     });
   });
