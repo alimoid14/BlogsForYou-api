@@ -22,18 +22,21 @@ module.exports = function (passport) {
   );
 
   passport.serializeUser((user, cb) => {
-    cb(null, user.id);
+    console.log("Serializing user:", user);
+    cb(null, user._id);
   });
 
   passport.deserializeUser((id, cb) => {
+    console.log("Deserializing user with ID:", id);
     User.findOne({ _id: id }).then((user, err) => {
       if (!user) {
+        console.log("User not found during deserialization");
         return cb(null, false); // User not found
       }
       const userInformation = {
         username: user.username,
       };
-      console.log(userInformation);
+      console.log("Deserialized user information:", userInformation);
       cb(err, userInformation);
     });
   });
