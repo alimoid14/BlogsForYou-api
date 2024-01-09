@@ -197,6 +197,6 @@ app.get("/BlogsByUser", (req, res) => {
 
 //-----------------------------------------------------END OF ROUTES--------------------------------------------------//
 
-app.listen(3001, () => {
+app.listen(process.env.PORT || 3001, () => {
   console.log("Server is running perfectly YOOOOO!");
 });
