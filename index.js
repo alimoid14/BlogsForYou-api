@@ -35,9 +35,6 @@ app.use(
     store: store,
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      secure: true,
-    },
   })
 );
 app.use(passport.initialize());
