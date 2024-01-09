@@ -35,6 +35,9 @@ app.use(
     store: store,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      secure: true,
+    },
   })
 );
 app.use(passport.initialize());
@@ -59,14 +62,23 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res, next) => {
   passport.authenticate("local", (error, user, info) => {
-    if (error) console.log(error);
-    if (!user) res.send("No User Exists or wrong credentials");
-    else {
-      req.logIn(user, (err) => {
-        if (err) throw err;
-        res.send("Successfully Authenticated");
-      });
+    if (error) {
+      console.error(error);
+      return res.status(500).send("Internal Server Error");
     }
+    if (!user) {
+      console.log("No User Exists or wrong credentials");
+      return res.send("No User Exists or wrong credentials");
+    }
+
+    req.logIn(user, (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send("Internal Server Error");
+      }
+      console.log("Successfully Authenticated");
+      return res.send("Successfully Authenticated");
+    });
   })(req, res, next);
 });
 
