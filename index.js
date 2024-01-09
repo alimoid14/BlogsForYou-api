@@ -13,13 +13,15 @@ const bcrypt = require("bcryptjs");
 const bodyParser = require("body-parser");
 
 const app = express();
+
+app.set("trust proxy", 1);
+
 app.use(express.json());
 app.use(
   cors({
     origin: "https://blogs-for-you.vercel.app", // <-- location of the react app were connecting to
     methods: "GET,PUT,POST,DELETE",
     credentials: true,
-    preflightContinue: true,
   })
 );
 app.use(bodyParser.json());
