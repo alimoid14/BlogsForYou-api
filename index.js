@@ -19,6 +19,7 @@ app.use(
     origin: "https://blogs-for-you.vercel.app", // <-- location of the react app were connecting to
     methods: "GET,PUT,POST,DELETE",
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization", "application/json"],
   })
 );
 app.use(bodyParser.json());
