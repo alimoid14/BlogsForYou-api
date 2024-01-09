@@ -120,6 +120,8 @@ app.get("/Blogs", (req, res) => {
     if (error) console.log(error);
     res.json(blogs);
   });
+  console.log(req.user);
+  console.log(req.userInformation);
 });
 
 app.post("/Blogs", isAuthenticated, async (req, res) => {
