@@ -116,7 +116,12 @@ app.post("/logout", function (req, res, next) {
 });
 
 app.get("/User", (req, res) => {
-  res.setHeader("Content-Type", "application/json");
+  res.setHeader(
+    "Content-Type",
+    "application/json",
+    "Access-Control-Allow-Origin",
+    "http://localhost:3000/"
+  );
   res.send(JSON.stringify(req.user));
 });
 
