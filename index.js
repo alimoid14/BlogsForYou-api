@@ -74,6 +74,7 @@ app.post("/login", (req, res, next) => {
         return res.status(500).send("Internal Server Error");
       }
       console.log("Successfully Authenticated");
+      console.log(req.user);
       return res.send("Successfully Authenticated");
     });
   })(req, res, next);
@@ -120,8 +121,8 @@ app.get("/Blogs", (req, res) => {
     if (error) console.log(error);
     res.json(blogs);
   });
-  console.log(req.user);
-  console.log(req.userInformation);
+  //console.log(req.user);
+  //console.log(req.userInformation);
 });
 
 app.post("/Blogs", isAuthenticated, async (req, res) => {
