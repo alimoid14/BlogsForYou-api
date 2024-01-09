@@ -29,6 +29,7 @@ const store = new MongoDBStore({
   expires: 1000 * 60 * 60 * 24, // Session will expire after 1 day
 });
 
+app.use(require("cookie-parser"));
 app.use(
   session({
     secret: process.env.SECRET,
