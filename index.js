@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://blogs-for-you.vercel.app/", // <-- location of the react app were connecting to
+    origin: "https://blogs-for-you.vercel.app", // <-- location of the react app were connecting to
     credentials: true,
   })
 );
