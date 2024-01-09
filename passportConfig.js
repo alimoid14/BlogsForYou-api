@@ -26,9 +26,9 @@ module.exports = function (passport) {
     cb(null, user._id);
   });
 
-  passport.deserializeUser((id, cb) => {
-    console.log("Deserializing user with ID:", id);
-    User.findOne({ _id: id }).then((user, err) => {
+  passport.deserializeUser((_id, cb) => {
+    console.log("Deserializing user with ID:", _id);
+    User.findOne({ _id: _id }).then((user, err) => {
       if (!user) {
         console.log("User not found during deserialization");
         return cb(null, false); // User not found
