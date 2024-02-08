@@ -73,7 +73,7 @@ app.post("/login", (req, res, next) => {
     }
     if (!user) {
       console.log("No User Exists or wrong credentials");
-      return res.send("No User Exists or wrong credentials");
+      return res.status(401).send("No User Exists or wrong credentials!");
     }
 
     req.logIn(user, (err) => {
@@ -83,7 +83,7 @@ app.post("/login", (req, res, next) => {
       }
       console.log("Successfully Authenticated");
       //console.log(req.user); --> whole user info available here
-      return res.send("Successfully Authenticated");
+      return res.status(200).send("Successfully Authenticated");
     });
   })(req, res, next);
 });
@@ -94,7 +94,9 @@ app.post("/register", (req, res) => {
   }).then(async (foundUser, error) => {
     if (error) console.log(error);
     if (foundUser)
-      res.send("An account with this email/username already exists");
+      res
+        .status(204)
+        .send("An account with this email/username already exists");
 
     const hashedPass = await bcrypt.hash(req.body.password, 13);
     if (!foundUser) {
@@ -104,7 +106,7 @@ app.post("/register", (req, res) => {
         password: hashedPass,
       });
       await newUser.save();
-      res.send("User created");
+      res.status(201).send("User created! You can login now.");
     }
   });
 });
@@ -115,19 +117,19 @@ app.post("/logout", function (req, res, next) {
     if (error) {
       return next(error);
     }
-    res.json();
+    res.status(200).send("");
   });
 });
 
 app.get("/User", (req, res) => {
   res.setHeader("Content-Type", "application/json");
-  res.send(JSON.stringify(req.user));
+  res.status(200).send(JSON.stringify(req.user));
 });
 
 app.get("/Blogs", (req, res) => {
   Blog.find().then((blogs, error) => {
     if (error) console.log(error);
-    res.json(blogs);
+    res.status(200).json(blogs);
   });
   //console.log(req.user);
   //console.log(req.userInformation);
@@ -138,14 +140,14 @@ app.post("/Blogs", isAuthenticated, async (req, res) => {
   const newBlog = new Blog(blog);
   await newBlog.save();
 
-  res.json(blog);
+  res.status(200).json(blog);
 });
 
 app.get("/Blogs/:id", (req, res) => {
   const id = req.params.id;
   Blog.findById(id).then((blog, error) => {
     if (error) console.log(error);
-    res.json(blog);
+    res.status(200).json(blog);
   });
 });
 
@@ -161,7 +163,7 @@ app.put("/Blogs/:id", isAuthenticated, (req, res) => {
   Blog.findByIdAndUpdate(req.params.id, { content: req.body.content }).then(
     (result, error) => {
       console.log(req.params.id);
-      res.send("Succesfully made the changes");
+      res.status(201).send("Succesfully made the changes");
       if (error) console.log(error);
     }
   );
@@ -172,8 +174,8 @@ app.post("/checkUsername", (req, res) => {
     username: req.body.username,
   }).then(async (foundUser, error) => {
     if (error) console.log(error);
-    if (foundUser) res.send("username already exists");
-    else res.send("");
+    if (foundUser) res.status(204).send("username already exists");
+    else res.status(404).send("");
   });
 });
 
@@ -182,7 +184,8 @@ app.post("/checkEmail", (req, res) => {
     email: req.body.email,
   }).then(async (foundUser, error) => {
     if (error) console.log(error);
-    if (foundUser) res.send("account with this email already exists");
+    if (foundUser)
+      res.status(204).send("account with this email already exists");
     else res.send("");
   });
 });
@@ -190,7 +193,7 @@ app.post("/checkEmail", (req, res) => {
 app.get("/UserName", (req, res) => {
   User.findOne({ username: req.query.username }).then((foundUser, error) => {
     if (foundUser) res.send(JSON.stringify({ username: foundUser.username }));
-    else res.send("");
+    else res.status(404).send("");
     if (error) console.log(error);
   });
 });
@@ -199,7 +202,7 @@ app.get("/BlogsByUser", (req, res) => {
   //console.log(req.query);
   Blog.find({ username: req.query.username }).then((blogs, error) => {
     if (error) console.log(error);
-    res.json(blogs);
+    if (blogs) res.status(200).json(blogs);
   });
 });
 
