@@ -174,7 +174,7 @@ app.post("/checkUsername", (req, res) => {
     username: req.body.username,
   }).then(async (foundUser, error) => {
     if (error) console.log(error);
-    if (foundUser) res.status(204).send("username already exists");
+    if (foundUser) res.send("username already exists");
     else res.send("");
   });
 });
@@ -184,8 +184,7 @@ app.post("/checkEmail", (req, res) => {
     email: req.body.email,
   }).then(async (foundUser, error) => {
     if (error) console.log(error);
-    if (foundUser)
-      res.status(204).send("account with this email already exists");
+    if (foundUser) res.send("account with this email already exists");
     else res.send("");
   });
 });
